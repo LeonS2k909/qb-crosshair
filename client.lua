@@ -167,7 +167,7 @@ CreateThread(function()
         local inVeh = IsPedInAnyVehicle(ped, false)
         local paused = IsPauseMenuActive()
         local aiming = IsPlayerFreeAiming(PlayerId()) or IsAimCamActive()
-        local shouldShow = crosshairEnabled and aiming and armed and not inVeh and not paused and crosshairType ~= "none"
+        local shouldShow = dbgForce or (crosshairEnabled and aiming and armed and not inVeh and not paused and crosshairType ~= "none")
         if shouldShow ~= lastActive then
             lastActive = shouldShow
             SendNUIMessage({ action = "setActive", active = shouldShow })
@@ -364,4 +364,23 @@ RegisterNUICallback("closePopup", function(_, cb)
     SetNuiFocus(false, false)
     SendNUIMessage({ action = "hidePopup" })
     cb({ ok = true })
+end)
+
+-- toggleable debug
+local dbgForce = false
+
+RegisterCommand("crosshairdebug", function()
+    dbgForce = not dbgForce
+    if dbgForce then
+        setEnabled(true)
+        setType("modern")
+        lastActive = true
+        SendNUIMessage({ action = "setActive", active = true })
+        print("^2[Crosshair] Debug forced ON^0")
+    else
+        lastActive = false
+        SendNUIMessage({ action = "setActive", active = false })
+        pushCoreState() -- resync enabled/type/cfg to NUI
+        print("^2[Crosshair] Debug OFF^0")
+    end
 end)
