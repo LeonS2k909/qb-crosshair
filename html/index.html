@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>qb-crosshair</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <!-- Crosshair Overlay (live in-game) -->
+  <div id="crosshair-overlay" class="hidden-init">
+    <!-- Sphere -->
+    <div id="ch-modern" class="ch hidden">
+      <div class="ring neon"></div>
+      <div class="dot neon"></div>
+    </div>
+
+    <!-- Classic -->
+    <div id="ch-classic" class="ch hidden">
+      <div class="seg t neon"></div>
+      <div class="seg r neon"></div>
+      <div class="seg b neon"></div>
+      <div class="seg l neon"></div>
+    </div>
+
+    <!-- Custom (CS2-like) -->
+    <div id="ch-custom" class="ch hidden">
+      <div class="seg t"></div>
+      <div class="seg r"></div>
+      <div class="seg b"></div>
+      <div class="seg l"></div>
+      <div class="cdot"></div>
+    </div>
+
+    <!-- Live Hit markers -->
+    <div id="hit-layer">
+      <div class="hm hm-x"><span class="a"></span><span class="b"></span></div>
+      <div class="hm hm-ring"></div>
+      <div class="hm hm-dot"></div>
+      <div class="hm hm-diamond"></div>
+    </div>
+  </div>
+
+  <!-- Popup -->
+  <div id="popup" class="popup hidden">
+    <div class="pop-card glass">
+      <div class="pop-head">
+        <div class="brand-pill">VERA</div>
+        <span class="pop-title">Crosshair Config</span>
+        <button id="x-close" class="ghost" aria-label="Close">×</button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="crosshair">Crosshair</button>
+        <button class="tab" data-tab="hit">Hit Marker</button>
+      </div>
+
+      <div class="pop-body">
+        <!-- PAGE: CROSSHAIR -->
+        <section id="page-crosshair">
+          <div class="row">
+            <div class="group">
+              <div class="label">Style</div>
+              <div class="chips">
+                <button class="chip select" data-type="none">None</button>
+                <button class="chip select" data-type="modern">Sphere</button>
+                <button class="chip select" data-type="classic">Classic</button>
+                <button class="chip select" data-type="custom">Custom</button>
+              </div>
+            </div>
+            <div class="group">
+              <div class="label">Preview</div>
+              <div class="preview">
+                <div class="demo none hidden" id="prev-none"></div>
+                <div class="demo modern hidden" id="prev-modern">
+                  <div class="ring"></div>
+                  <div class="dot"></div>
+                </div>
+                <div class="demo classic hidden" id="prev-classic">
+                  <div class="seg t"></div>
+                  <div class="seg r"></div>
+                  <div class="seg b"></div>
+                  <div class="seg l"></div>
+                </div>
+                <div class="demo custom hidden" id="prev-custom">
+                  <div class="seg t"></div>
+                  <div class="seg r"></div>
+                  <div class="seg b"></div>
+                  <div class="seg l"></div>
+                  <div class="cdot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom crosshair controls -->
+          <div id="custom-controls" class="controls hidden">
+            <div class="grid">
+              <div class="ctrl">
+                <label>Color</label>
+                <div class="val-row">
+                  <input id="ccolor" type="color" value="#3cff7a">
+                  <span class="val-badge" id="ccolor-val">#3cff7a</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <label>Alpha</label>
+                <div class="val-row">
+                  <input id="calpha" type="range" min="0" max="100" value="100">
+                  <span class="val-badge" id="calpha-val">100%</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <label>Thickness</label>
+                <div class="val-row">
+                  <input id="cthick" type="range" min="1" max="12" value="2">
+                  <span class="val-badge" id="cthick-val">2px</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <label>Length</label>
+                <div class="val-row">
+                  <input id="csize" type="range" min="2" max="64" value="10">
+                  <span class="val-badge" id="csize-val">10px</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <label>Gap</label>
+                <div class="val-row">
+                  <input id="cgap" type="range" min="0" max="48" value="6">
+                  <span class="val-badge" id="cgap-val">6px</span>
+                </div>
+              </div>
+              <div class="ctrl"><label class="checkbox"><input id="cdot" type="checkbox" checked> Center Dot</label></div>
+              <div class="ctrl"><label class="checkbox"><input id="ctstyle" type="checkbox"> T-Style</label></div>
+              <div class="ctrl"><label class="checkbox"><input id="coutline" type="checkbox" checked> Outline</label></div>
+              <div class="ctrl">
+                <label>Outline Thicc</label>
+                <div class="val-row">
+                  <input id="coutth" type="range" min="0" max="8" value="2">
+                  <span class="val-badge" id="coutth-val">2px</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <label>Outline Alpha</label>
+                <div class="val-row">
+                  <input id="couta" type="range" min="0" max="100" value="80">
+                  <span class="val-badge" id="couta-val">80%</span>
+                </div>
+              </div>
+              <div class="ctrl"><label class="checkbox"><input id="cdynm" type="checkbox" checked> Dynamic Move</label></div>
+              <div class="ctrl">
+                <label>Move Influence</label>
+                <div class="val-row">
+                  <input id="cmovei" type="range" min="0" max="100" value="60">
+                  <span class="val-badge" id="cmovei-val">60%</span>
+                </div>
+              </div>
+              <div class="ctrl"><label class="checkbox"><input id="cdynf" type="checkbox" checked> Dynamic Fire</label></div>
+              <div class="ctrl">
+                <label>Fire Influence</label>
+                <div class="val-row">
+                  <input id="cfirei" type="range" min="0" max="100" value="60">
+                  <span class="val-badge" id="cfirei-val">60%</span>
+                </div>
+              </div>
+              <div class="ctrl col2">
+                <button id="creset" class="btn">Reset to Default</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PAGE: HIT MARKER -->
+        <section id="page-hit" class="hidden">
+          <div class="row">
+            <div class="group">
+              <div class="label">Hit Marker Style</div>
+              <div class="chips" id="hit-style-chips">
+                <button class="chip hitstyle" data-hit="none">None</button>
+                <button class="chip hitstyle" data-hit="flash">Flash</button>
+                <button class="chip hitstyle" data-hit="x">X</button>
+                <button class="chip hitstyle" data-hit="ring">Ring</button>
+                <button class="chip hitstyle" data-hit="dot">Dot</button>
+                <button class="chip hitstyle" data-hit="diamond">Diamond</button>
+              </div>
+            </div>
+            <div class="group">
+              <div class="label">Hit Preview</div>
+              <div class="preview" id="hit-preview">
+                <div id="hit-preview-layer">
+                  <div class="hm hm-x"><span class="a"></span><span class="b"></span></div>
+                  <div class="hm hm-ring"></div>
+                  <div class="hm hm-dot"></div>
+                  <div class="hm hm-diamond"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <div class="grid">
+              <div class="ctrl">
+                <label>Color</label>
+                <div class="val-row">
+                  <input id="hit-color" type="color" value="#3cff7a" />
+                  <span class="val-badge" id="hit-color-val">#3cff7a</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <label>Alpha</label>
+                <div class="val-row">
+                  <input id="halpha" type="range" min="10" max="100" value="100">
+                  <span class="val-badge" id="halpha-val">100%</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <label>Thickness</label>
+                <div class="val-row">
+                  <input id="hthick" type="range" min="1" max="16" value="3">
+                  <span class="val-badge" id="hthick-val">3px</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <label>Size</label>
+                <div class="val-row">
+                  <input id="hsize" type="range" min="6" max="120" value="32">
+                  <span class="val-badge" id="hsize-val">32px</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <label>Duration (ms)</label>
+                <div class="val-row">
+                  <input id="hdur" type="range" min="120" max="1200" value="420">
+                  <span class="val-badge" id="hdur-val">420</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <label class="checkbox"><input id="houtline" type="checkbox" checked> Outline</label>
+              </div>
+              <div class="ctrl">
+                <label>Outline Thicc</label>
+                <div class="val-row">
+                  <input id="houtth" type="range" min="0" max="8" value="2">
+                  <span class="val-badge" id="houtth-val">2px</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <label>Outline Alpha</label>
+                <div class="val-row">
+                  <input id="houta" type="range" min="0" max="100" value="80">
+                  <span class="val-badge" id="houta-val">80%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
